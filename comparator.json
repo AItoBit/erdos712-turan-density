@@ -1,0 +1,17 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "Erdos712.tendsto_turanDensity",
+    "Erdos712.turanDensity_nonneg",
+    "Erdos712.turanDensity_le_one",
+    "Erdos712.tendsto_ex_two_div_choose",
+    "Erdos712.turanDensity_two",
+    "Erdos712.tendsto_ex_two_div_sq"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
+}

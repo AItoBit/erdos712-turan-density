@@ -1,0 +1,44 @@
+version: v0.4
+project:
+  name: Turan density existence and the graph case
+  description: >-
+    Formalization of convergence of normalized clique-free hypergraph extremal
+    numbers, bounds between zero and one for their limits, and Turan's graph
+    formula in both binomial and square normalizations. These are supporting
+    results for Erdos problem 712; the values for k > r > 2 are not determined.
+  authors: [AItoBit]
+  responsible_maintainers: [AItoBit]
+  license: Apache-2.0
+classification:
+  arxiv: [math.CO]
+  msc2020: [05C35, 05C65]
+sources:
+  - title: Erdos problem 712 and its classical graph special case
+    type: other
+    location: https://www.erdosproblems.com/712
+    relationship: adapts
+    note: Only supporting results and the solved graph case are formalized.
+related_formalizations:
+  - id: https://github.com/leanprover-community/mathlib4/tree/0db6cb99b412983de54b59ecc1b0b2747542cda3
+    relationship: builds-on
+    note: Uses Mathlib's finite graph Turan theorem and limit theory.
+automation:
+  methods:
+    - method: agent
+      framework: Codex
+      tool_setup: Packaging and source inspection of a user-supplied Lean file.
+  notes: >-
+    The original development was supplied by the user. Its original generation
+    process is unknown. Codex added module headers, the Challenge/Solution split,
+    metadata and verification workflows.
+review:
+  status: unchecked
+  notes: No independent review or successful compilation is claimed at preparation time.
+status:
+  scope: Limit existence, elementary density bounds, and the graph case only.
+fidelity:
+  divergences: >-
+    This does not solve Erdos 712. The open Turan tetrahedron conjecture appears
+    only as a Prop definition in Solution and is not a compared theorem.
+    The function IsSolution characterizes limit values but does not supply an
+    explicit answer to the open problem.
