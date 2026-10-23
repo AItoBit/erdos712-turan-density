@@ -85,7 +85,7 @@ def D12Outcome (edge : Nat → Prop) (units : List (Nat × Bool)) : Prop :=
   HasHomogeneousFour edge ∨
     HasFourHomogeneousTriples edge ∨ ViolatesUnits edge units
 
-private theorem not_violatesUnit_of_satisfiesUnit (edge : Nat → Prop)
+theorem not_violatesUnit_of_satisfiesUnit (edge : Nat → Prop)
     (u : Nat × Bool) (h : SatisfiesUnit edge u) : ¬ ViolatesUnit edge u := by
   rcases u with ⟨v, expected⟩
   cases expected
@@ -104,21 +104,21 @@ theorem fourHomogeneousTriples_of_outcome (edge : Nat → Prop)
   · obtain ⟨u, hu, hv⟩ := h
     exact (not_violatesUnit_of_satisfiesUnit edge u (hunits u hu) hv).elim
 
-private theorem outcome_of_positive_four (edge : Nat → Prop)
+theorem outcome_of_positive_four (edge : Nat → Prop)
     (units : List (Nat × Bool)) (s : List Nat) (hs : ValidFour s)
     (h : conjunction ((unorderedPairs s).map fun ij ↦
       edge (edgeIndex12 ij.1 ij.2))) :
     D12Outcome edge units := by
   exact Or.inl ⟨s, hs, Or.inl h⟩
 
-private theorem outcome_of_negative_four (edge : Nat → Prop)
+theorem outcome_of_negative_four (edge : Nat → Prop)
     (units : List (Nat × Bool)) (s : List Nat) (hs : ValidFour s)
     (h : conjunction ((unorderedPairs s).map fun ij ↦
       ¬ edge (edgeIndex12 ij.1 ij.2))) :
     D12Outcome edge units := by
   exact Or.inl ⟨s, hs, Or.inr h⟩
 
-private theorem outcome_of_factor (edge : Nat → Prop)
+theorem outcome_of_factor (edge : Nat → Prop)
     (units : List (Nat × Bool)) (a b c d : List Nat)
     (hp : ValidTriplePartition a b c d)
     (h : Homogeneous edge a ∧ Homogeneous edge b ∧
@@ -126,7 +126,7 @@ private theorem outcome_of_factor (edge : Nat → Prop)
     D12Outcome edge units := by
   exact Or.inr (Or.inl ⟨a, b, c, d, hp, h⟩)
 
-private theorem outcome_of_unit (edge : Nat → Prop)
+theorem outcome_of_unit (edge : Nat → Prop)
     (units : List (Nat × Bool)) (u : Nat × Bool) (hu : u ∈ units)
     (h : ViolatesUnit edge u) : D12Outcome edge units := by
   exact Or.inr (Or.inr ⟨u, hu, h⟩)
