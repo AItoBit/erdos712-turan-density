@@ -1,0 +1,57 @@
+name: Verify Erdos 752 proof
+on:
+  push:
+    branches: [verify-erdos752]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: harness
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/formal-conjectures
+          ref: d9c9d8ea1b3b1f2e617fd5e449bdda120872bbd3
+          path: project
+      - uses: actions/checkout@v4
+        with:
+          repository: plby/lean-proofs
+          ref: 8822f7ddef30fadbd92e1c6ab4ed897af356af5e
+          path: candidate
+          sparse-checkout: |
+            src/latest/ErdosProblems/Erdos752
+            src/latest/ErdosProblems/Erdos752.lean
+            src/latest/ErdosProblems/Erdos182
+            src/latest/ErdosProblems/Erdos594.lean
+      - name: Prepare exact candidate proof
+        run: |
+          mkdir -p project/ErdosProblems
+          cp -r candidate/src/latest/ErdosProblems/Erdos752 project/ErdosProblems/
+          cp -r candidate/src/latest/ErdosProblems/Erdos182 project/ErdosProblems/
+          cp candidate/src/latest/ErdosProblems/Erdos752.lean project/ErdosProblems/
+          cp candidate/src/latest/ErdosProblems/Erdos594.lean project/ErdosProblems/
+          cat >> project/lakefile.toml <<'EOF'
+
+          [[lean_lib]]
+          name = "ErdosProblems"
+          [lean_lib.leanOptions]
+          autoImplicit = true
+          weak.linter.style.copyright.formalConjectures = false
+          weak.linter.style.namespace = false
+          weak.linter.style.stubs = false
+          EOF
+          printf 'import ErdosProblems.Erdos752\n#print axioms Erdos752.erdos_752\n#print axioms Erdos752.explicitMinimumDegreeResolution\n' > project/Audit752.lean
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: project
+          build-args: ErdosProblems.Erdos752
+          test: false
+          lint: false
+      - name: Audit final proof axioms
+        working-directory: project
+        run: lake env lean Audit752.lean
