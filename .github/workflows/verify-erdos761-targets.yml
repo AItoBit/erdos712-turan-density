@@ -1,0 +1,30 @@
+name: Check open Erdos 761 target definitions
+on:
+  push:
+    branches: [verify-erdos761-targets]
+permissions:
+  contents: read
+jobs:
+  targets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: harness
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/formal-conjectures
+          ref: d9c9d8ea1b3b1f2e617fd5e449bdda120872bbd3
+          path: project
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: project
+          build-args: FormalConjecturesUtil
+          test: false
+          lint: false
+      - name: Elaborate target propositions without asserting them
+        working-directory: project
+        run: |
+          cp ../harness/Erdos761Targets.lean Erdos761Targets.lean
+          lake env lean Erdos761Targets.lean
