@@ -1,0 +1,53 @@
+name: Verify Erdos 754 proof
+on:
+  push:
+    branches: [verify-erdos754]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: harness
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/formal-conjectures
+          ref: d9c9d8ea1b3b1f2e617fd5e449bdda120872bbd3
+          path: project
+      - uses: actions/checkout@v4
+        with:
+          repository: plby/lean-proofs
+          ref: 8822f7ddef30fadbd92e1c6ab4ed897af356af5e
+          path: candidate
+          sparse-checkout: |
+            src/latest/ErdosProblems/Erdos755.lean
+            src/latest/ErdosProblems/Erdos754.lean
+      - name: Prepare exact candidate proof
+        run: |
+          mkdir -p project/ErdosProblems
+          cp candidate/src/latest/ErdosProblems/Erdos755.lean project/ErdosProblems/
+          cp candidate/src/latest/ErdosProblems/Erdos754.lean project/ErdosProblems/
+          cat >> project/lakefile.toml <<'EOF'
+
+          [[lean_lib]]
+          name = "ErdosProblems"
+          [lean_lib.leanOptions]
+          autoImplicit = true
+          weak.linter.style.copyright.formalConjectures = false
+          weak.linter.style.namespace = false
+          weak.linter.style.stubs = false
+          EOF
+          printf 'import ErdosProblems.Erdos754\n#print axioms Erdos754.erdos_754\n#print axioms Erdos754.erdos754_asymptotic\n' > project/Audit754.lean
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: project
+          build-args: ErdosProblems.Erdos754
+          test: false
+          lint: false
+      - name: Audit final proof axioms
+        working-directory: project
+        run: lake env lean Audit754.lean
