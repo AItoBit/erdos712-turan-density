@@ -1,0 +1,188 @@
+Source commit:8822f7ddef30fadbd92e1c6ab4ed897af356af5e
+94 Lean modules ported;275 assets copied unchanged.
+Transformation: module before imports; public import for every original import; @[expose] public section after imports. All original private declarations and headers retained. No proof-body changes.
+ErdosProblems/Erdos758.lean
+ErdosProblems/Erdos758/D12/Cases/d10.lean
+ErdosProblems/Erdos758/D12/Cases/d11.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r0_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r0_s1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r0_s2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r0_s3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r0_s4.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r0_s5.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s2_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s2_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s2_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s2_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s2_t4.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s3_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s3_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s3_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s3_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s3_t4.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s4_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s4_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s4_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s4_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s4_t4.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r1_s5.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s1_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s1_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s1_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s1_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s2_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s2_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s2_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s2_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s3_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s3_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s3_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s3_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s4_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s4_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s4_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s4_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r2_s5.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s1_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s1_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s1_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s2_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s2_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s2_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s3.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s4.lean
+ErdosProblems/Erdos758/D12/Cases/d6_r3_s5.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r0.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r1_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r1_s1.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r1_s2.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r1_s3.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r1_s4.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s1.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s2.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s3_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s3_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s3_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s3_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s3_t4.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r2_s4.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r3_s0.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r3_s1.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r3_s2.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r3_s3.lean
+ErdosProblems/Erdos758/D12/Cases/d7_r3_s4.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r0.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t4.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t5.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r1_t6.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r2_t0.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r2_t1.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r2_t2.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r2_t3.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r2_t4.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r2_t5.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r3.lean
+ErdosProblems/Erdos758/D12/Cases/d8_r4.lean
+ErdosProblems/Erdos758/D12/Cases/d9.lean
+ErdosProblems/Erdos758/D12/Certificates.lean
+ErdosProblems/Erdos758/D12/Semantic.lean
+
+Resource-only added imports (two acyclic lanes):
+d6_r0_s0 imports d10
+d6_r0_s1 imports d11
+d6_r0_s2 imports d6_r0_s0
+d6_r0_s3 imports d6_r0_s1
+d6_r0_s4 imports d6_r0_s2
+d6_r0_s5 imports d6_r0_s3
+d6_r1_s0 imports d6_r0_s4
+d6_r1_s1 imports d6_r0_s5
+d6_r1_s2_t0 imports d6_r1_s0
+d6_r1_s2_t1 imports d6_r1_s1
+d6_r1_s2_t2 imports d6_r1_s2_t0
+d6_r1_s2_t3 imports d6_r1_s2_t1
+d6_r1_s2_t4 imports d6_r1_s2_t2
+d6_r1_s3_t0 imports d6_r1_s2_t3
+d6_r1_s3_t1 imports d6_r1_s2_t4
+d6_r1_s3_t2 imports d6_r1_s3_t0
+d6_r1_s3_t3 imports d6_r1_s3_t1
+d6_r1_s3_t4 imports d6_r1_s3_t2
+d6_r1_s4_t0 imports d6_r1_s3_t3
+d6_r1_s4_t1 imports d6_r1_s3_t4
+d6_r1_s4_t2 imports d6_r1_s4_t0
+d6_r1_s4_t3 imports d6_r1_s4_t1
+d6_r1_s4_t4 imports d6_r1_s4_t2
+d6_r1_s5 imports d6_r1_s4_t3
+d6_r2_s0 imports d6_r1_s4_t4
+d6_r2_s1_t0 imports d6_r1_s5
+d6_r2_s1_t1 imports d6_r2_s0
+d6_r2_s1_t2 imports d6_r2_s1_t0
+d6_r2_s1_t3 imports d6_r2_s1_t1
+d6_r2_s2_t0 imports d6_r2_s1_t2
+d6_r2_s2_t1 imports d6_r2_s1_t3
+d6_r2_s2_t2 imports d6_r2_s2_t0
+d6_r2_s2_t3 imports d6_r2_s2_t1
+d6_r2_s3_t0 imports d6_r2_s2_t2
+d6_r2_s3_t1 imports d6_r2_s2_t3
+d6_r2_s3_t2 imports d6_r2_s3_t0
+d6_r2_s3_t3 imports d6_r2_s3_t1
+d6_r2_s4_t0 imports d6_r2_s3_t2
+d6_r2_s4_t1 imports d6_r2_s3_t3
+d6_r2_s4_t2 imports d6_r2_s4_t0
+d6_r2_s4_t3 imports d6_r2_s4_t1
+d6_r2_s5 imports d6_r2_s4_t2
+d6_r3_s0 imports d6_r2_s4_t3
+d6_r3_s1_t0 imports d6_r2_s5
+d6_r3_s1_t1 imports d6_r3_s0
+d6_r3_s1_t2 imports d6_r3_s1_t0
+d6_r3_s2_t0 imports d6_r3_s1_t1
+d6_r3_s2_t1 imports d6_r3_s1_t2
+d6_r3_s2_t2 imports d6_r3_s2_t0
+d6_r3_s3 imports d6_r3_s2_t1
+d6_r3_s4 imports d6_r3_s2_t2
+d6_r3_s5 imports d6_r3_s3
+d7_r0 imports d6_r3_s4
+d7_r1_s0 imports d6_r3_s5
+d7_r1_s1 imports d7_r0
+d7_r1_s2 imports d7_r1_s0
+d7_r1_s3 imports d7_r1_s1
+d7_r1_s4 imports d7_r1_s2
+d7_r2_s0 imports d7_r1_s3
+d7_r2_s1 imports d7_r1_s4
+d7_r2_s2 imports d7_r2_s0
+d7_r2_s3_t0 imports d7_r2_s1
+d7_r2_s3_t1 imports d7_r2_s2
+d7_r2_s3_t2 imports d7_r2_s3_t0
+d7_r2_s3_t3 imports d7_r2_s3_t1
+d7_r2_s3_t4 imports d7_r2_s3_t2
+d7_r2_s4 imports d7_r2_s3_t3
+d7_r3_s0 imports d7_r2_s3_t4
+d7_r3_s1 imports d7_r2_s4
+d7_r3_s2 imports d7_r3_s0
+d7_r3_s3 imports d7_r3_s1
+d7_r3_s4 imports d7_r3_s2
+d8_r0 imports d7_r3_s3
+d8_r1_t0 imports d7_r3_s4
+d8_r1_t1 imports d8_r0
+d8_r1_t2 imports d8_r1_t0
+d8_r1_t3 imports d8_r1_t1
+d8_r1_t4 imports d8_r1_t2
+d8_r1_t5 imports d8_r1_t3
+d8_r1_t6 imports d8_r1_t4
+d8_r2_t0 imports d8_r1_t5
+d8_r2_t1 imports d8_r1_t6
+d8_r2_t2 imports d8_r2_t0
+d8_r2_t3 imports d8_r2_t1
+d8_r2_t4 imports d8_r2_t2
+d8_r2_t5 imports d8_r2_t3
+d8_r3 imports d8_r2_t4
+d8_r4 imports d8_r2_t5
+d9 imports d8_r3

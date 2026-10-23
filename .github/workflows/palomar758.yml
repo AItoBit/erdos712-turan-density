@@ -1,0 +1,19 @@
+name: Palomar 758 full mechanical preflight
+on:
+  push:
+    branches: [palomar-erdos758]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    uses: PalomarRegistry/PalomarSubmission/.github/workflows/submission.yml@c02bbeaed888df45c4e28c4e99dba540ad21552a
+    with:
+      repository: ${{ github.repository }}
+      commit: ${{ github.sha }}
+      pipeline_commit: c02bbeaed888df45c4e28c4e99dba540ad21552a
+      request_id: erdos758test
+      mode: full
+      execution_profile: palomar-standard-v1
+      options: '{"project_path":"erdos758","comparator_config_path":"erdos758/comparator.json","authorization_relationship":"I have approval from a responsible author or maintainer"}'
+

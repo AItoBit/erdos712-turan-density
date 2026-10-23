@@ -1,0 +1,55 @@
+version: v0.4
+project:
+  name: Erdos 758 twelve-vertex cochromatic number
+  description: >-
+    Vendored and module-ported existing Lean proof that the maximum cochromatic
+    number of a twelve-vertex graph is four, with a universal upper bound and
+    an explicit Paley-prefix lower witness. This does not formalize the full
+    table of small values and does not determine z(20).
+  authors: [Codex, GPT-5.6 Sol, AItoBit]
+  responsible_maintainers: [AItoBit]
+  license: Apache-2.0
+classification:
+  arxiv: [math.CO]
+  msc2020: [05C15]
+sources:
+  - title: Erdos Problem 758
+    type: other
+    location: https://www.erdosproblems.com/758
+    relationship: formalizes
+    note: The twelve-vertex equality only; informal computation credited to Bhavik Mehta.
+related_formalizations:
+  - id: https://github.com/plby/lean-proofs/tree/8822f7ddef30fadbd92e1c6ab4ed897af356af5e/src/latest/ErdosProblems/Erdos758
+    relationship: adapts
+    note: >-
+      Existing proof vendored in full with its certificates, credits, and headers.
+      Original formal authors are Codex and GPT-5.6 Sol. AItoBit maintains the
+      packaging and module port; no new mathematical discovery is claimed.
+  - id: https://github.com/leanprover-community/mathlib4/tree/0df444a360eaa60ab8c11dca51a86af692955474
+    relationship: builds-on
+    note: Mathlib definitions, graph theory, and checked LRAT reconstruction.
+automation:
+  methods:
+    - method: agent
+      framework: Codex
+      tool_setup: Source audit, module port, Challenge/Solution packaging and verification setup.
+  notes: >-
+    Source proof credits Codex and GPT-5.6 Sol. This package reuses that proof;
+    Codex added module visibility declarations and the comparator entry points.
+    All 94 proof modules and 275 certificate assets are vendored. Bhavik Mehta
+    is credited for the informal computation, not as author of this packaging.
+review:
+  status: unchecked
+  notes: >-
+    Independent semantic source audit completed. The unported source previously
+    compiled with standard axioms only. The module port still requires a fresh
+    build and comparator check; no successful port verification is claimed here.
+status:
+  scope: The equality z(12)=4 only.
+fidelity:
+  divergences: >-
+    The broad table through n=19 and the unknown value at n=20 are not targets.
+    Challenge contains the deliberate comparison placeholder. Solution and all
+    vendored proof modules contain no sorry. AItoBit declared that they have
+    author/maintainer approval for the reused formalization. Original proof
+    attribution is retained; AItoBit maintains this vendored package.
