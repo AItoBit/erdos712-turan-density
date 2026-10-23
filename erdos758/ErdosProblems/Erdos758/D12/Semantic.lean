@@ -9,11 +9,11 @@ namespace Erdos758.D12Certificate
 
 /-! Semantic reconstruction for the dependency-reduced D12 LRAT suite. -/
 
-private def unorderedPairs : List Nat → List (Nat × Nat)
+def unorderedPairs : List Nat → List (Nat × Nat)
   | [] => []
   | x :: xs => xs.map (fun y ↦ (x, y)) ++ unorderedPairs xs
 
-private def conjunction : List Prop → Prop
+def conjunction : List Prop → Prop
   | [] => True
   | [p] => p
   | p :: q :: ps => p ∧ conjunction (q :: ps)
@@ -130,6 +130,8 @@ private theorem outcome_of_unit (edge : Nat → Prop)
     (units : List (Nat × Bool)) (u : Nat × Bool) (hu : u ∈ units)
     (h : ViolatesUnit edge u) : D12Outcome edge units := by
   exact Or.inr (Or.inr ⟨u, hu, h⟩)
+
+meta section
 
 open Lean Elab Term Meta
 
@@ -449,5 +451,7 @@ elab_rules : term
       let some start := start.raw.isNatLit? | throwError "natural range start expected"
       let some stop := stop.raw.isNatLit? | throwError "natural range stop expected"
       semanticRangeProof idsExpr unitsExpr (← elabTerm e none) start stop
+
+end
 
 end Erdos758.D12Certificate

@@ -305,6 +305,8 @@ lrat_proof raw
 
 open Lean Elab Term Meta
 
+meta section D8PropositionalElaboration
+
 private def choose : (k : Nat) → List Nat → List (List Nat)
   | 0, _ => [[]]
   | _ + 1, [] => []
@@ -451,6 +453,8 @@ elab_rules : term
       conclusionExpr (← elabTerm e none)
   | `(d8BridgedSpecialized($e)) => do
       bridgedSpecialization (← elabTerm e none)
+
+end D8PropositionalElaboration
 
 private def Conclusion (edge : Nat → Prop) : Prop := d8ConclusionBody(edge)
 
@@ -689,6 +693,8 @@ private def graphEdge (G : SimpleGraph (Fin 8)) : Nat → Prop
   | 27 => G.Adj 6 7
   | _ => False
 
+meta section D8GraphElaboration
+
 private def fin8ListExpr (xs : List Nat) : MetaM Expr := do
   let fin8 := mkApp (mkConst ``Fin) (mkNatLit 8)
   let mut out := []
@@ -766,6 +772,8 @@ syntax "d8GraphColoring(" term ")" : term
 elab_rules : term
   | `(d8GraphColoring($G)) => do
       graphColoringSpecialization (← elabTerm G none)
+
+end D8GraphElaboration
 
 theorem everyGraphColorableThree (G : SimpleGraph (Fin 8)) :
     CochromaticColorable G 3 := by
