@@ -23,7 +23,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           source=Path('ErdosProblems/Erdos758.lean').read_text()
-          prefix=source.split('open Erdos758.D12Certificate',1)[0]
+          prefix=source.split('/-! ## Dispatcher-facing wrappers -/',1)[0]
           prefix=prefix.replace('public import ErdosProblems.Erdos758.D12.Certificates\n','')
           Path('ErdosProblems/Erdos758Prefix.lean').write_text(prefix+'\nend Erdos758\n')
           PY
