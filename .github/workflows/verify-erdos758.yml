@@ -51,3 +51,11 @@ jobs:
       - name: Audit final proof axioms
         working-directory: project
         run: lake env lean Audit758.lean
+
+      - name: Verify upstream statement and exact proof bridge
+        working-directory: project
+        run: |
+          cp ../harness/Statement758.lean FormalConjectures/ErdosProblems/758.lean
+          lake build FormalConjectures.ErdosProblems.«758»
+          cp ../harness/ExactStatement758.lean ExactStatement758.lean
+          lake env lean ExactStatement758.lean
