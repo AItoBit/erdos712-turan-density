@@ -1,0 +1,31 @@
+name: Diagnose Lean 4.35 graph-side compatibility
+on:
+  push:
+    branches: [diagnose758435]
+permissions:
+  contents: read
+jobs:
+  graph-prefix:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean tooling
+        run: |
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch canonical Mathlib cache
+        working-directory: erdos758
+        run: lake exe cache get
+      - name: Check complete graph-side prefix without waiting for D12 certificates
+        working-directory: erdos758
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source=Path('ErdosProblems/Erdos758.lean').read_text()
+          prefix=source.split('open Erdos758.D12Certificate',1)[0]
+          prefix=prefix.replace('public import ErdosProblems.Erdos758.D12.Certificates\n','')
+          Path('ErdosProblems/Erdos758Prefix.lean').write_text(prefix+'\nend Erdos758\n')
+          PY
+          lake build ErdosProblems.Erdos758.D12.Semantic
+          lake env lean ErdosProblems/Erdos758Prefix.lean
