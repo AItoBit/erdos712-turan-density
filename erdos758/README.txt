@@ -22,7 +22,7 @@ SAT solver used to discover certificates is not a trusted theorem assumption.
 PORT-INVENTORY.txt records the mechanical module changes. Private declarations,
 source headers and original proof bodies are preserved.
 
-Lean4.33.1 and Mathlib0df444a360eaa60ab8c11dca51a86af692955474 are pinned.
+Lean4.35.0-rc2 and Mathlib065356127b1dc0016f66b7283ce0ce2c4055aa55 are pinned.
 Reproduction commands after dependencies are available:
   lake exe cache get
   lake build Solution
@@ -35,3 +35,4 @@ two acyclic lanes (sorted case i imports i-2). Unbounded parallel certificate
 builds exhausted runner memory; two-worker builds passed. These proof-neutral
 imports constrain Lake scheduling to at most two certificate cases at once.
 They add no mathematical axiom. Fresh compilation of this port is required.
+
