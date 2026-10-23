@@ -45,9 +45,18 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: project
-          build-args: ErdosProblems.Erdos758
+          build-args: ErdosProblems.Erdos758.D12.Semantic
           test: false
           lint: false
+      - name: Compile certificate cases sequentially
+        working-directory: project
+        run: |
+          for source in ErdosProblems/Erdos758/D12/Cases/*.lean; do
+            module="${source%.lean}"
+            module="${module//\//.}"
+            lake build "$module"
+          done
+          lake build ErdosProblems.Erdos758
       - name: Audit final proof axioms
         working-directory: project
         run: lake env lean Audit758.lean
