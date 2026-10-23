@@ -135,20 +135,20 @@ meta section
 
 open Lean Elab Term Meta
 
-private def choose : (k : Nat) → List Nat → List (List Nat)
+def choose : (k : Nat) → List Nat → List (List Nat)
   | 0, _ => [[]]
   | _ + 1, [] => []
   | k + 1, x :: xs =>
       (choose k xs).map (fun ys ↦ x :: ys) ++ choose (k + 1) xs
 
-private def pairs : List Nat → List (Nat × Nat)
+def pairs : List Nat → List (Nat × Nat)
   | [] => []
   | x :: xs => xs.map (fun y ↦ (x, y)) ++ pairs xs
 
-private def edges : List (Nat × Nat) := pairs (List.range 12)
-private def triples : List (List Nat) := choose 3 (List.range 12)
+def edges : List (Nat × Nat) := pairs (List.range 12)
+def triples : List (List Nat) := choose 3 (List.range 12)
 
-private partial def canonicalPartitions : List Nat → List (List (List Nat))
+partial def canonicalPartitions : List Nat → List (List (List Nat))
   | [] => [[]]
   | x :: xs =>
       (choose 2 xs).flatMap fun partners =>
@@ -156,31 +156,31 @@ private partial def canonicalPartitions : List Nat → List (List (List Nat))
         let rest := xs.filter fun y => !partners.contains y
         (canonicalPartitions rest).map fun tail => block :: tail
 
-private def edgeIndex (i j : Nat) : Nat :=
+def edgeIndex (i j : Nat) : Nat :=
   (edges.zipIdx.find? fun p => p.1 = (i, j)).get!.2
 
-private def edgeExpr (e : Expr) (i j : Nat) : Expr :=
+def edgeExpr (e : Expr) (i j : Nat) : Expr :=
   mkApp e (mkNatLit (edgeIndex i j))
 
-private def mkAndExpr : List Expr → MetaM Expr
+def mkAndExpr : List Expr → MetaM Expr
   | [] => pure (mkConst ``True)
   | [p] => pure p
   | p :: ps => return mkApp2 (mkConst ``And) p (← mkAndExpr ps)
 
-private def mkOrExpr : List Expr → MetaM Expr
+def mkOrExpr : List Expr → MetaM Expr
   | [] => pure (mkConst ``False)
   | [p] => pure p
   | p :: ps => return mkApp2 (mkConst ``Or) p (← mkOrExpr ps)
 
-private def homogeneousParts (e : Expr) (s : List Nat) : MetaM (Expr × Expr) := do
+def homogeneousParts (e : Expr) (s : List Nat) : MetaM (Expr × Expr) := do
   let es := (pairs s).map fun ij => edgeExpr e ij.1 ij.2
   return (← mkAndExpr es, ← mkAndExpr (es.map fun p => mkApp (mkConst ``Not) p))
 
-private def homogeneousExpr (e : Expr) (s : List Nat) : MetaM Expr := do
+def homogeneousExpr (e : Expr) (s : List Nat) : MetaM Expr := do
   let (pos, neg) ← homogeneousParts e s
   return mkApp2 (mkConst ``Or) pos neg
 
-private partial def balancedOr (xs : Array Expr) (start stop : Nat) : Expr :=
+partial def balancedOr (xs : Array Expr) (start stop : Nat) : Expr :=
   match stop - start with
   | 0 => mkConst ``False
   | 1 => xs[start]!
@@ -188,7 +188,7 @@ private partial def balancedOr (xs : Array Expr) (start stop : Nat) : Expr :=
       let mid := start + len / 2
       mkApp2 (mkConst ``Or) (balancedOr xs start mid) (balancedOr xs mid stop)
 
-private inductive LeafKind
+inductive LeafKind
   | positiveFour (s : List Nat)
   | negativeFour (s : List Nat)
   | impossible (pos neg : Expr) (positive : Bool)
@@ -196,12 +196,12 @@ private inductive LeafKind
   | unit (var : Nat) (expected : Bool)
   deriving Inhabited
 
-private structure Leaf where
+structure Leaf where
   raw : Expr
   kind : LeafKind
   deriving Inhabited
 
-private def originalLeaf (e : Expr) (units : List (Nat × Bool))
+def originalLeaf (e : Expr) (units : List (Nat × Bool))
     (fours : Array (List Nat)) (parts : Array (List (List Nat))) (id : Nat) : MetaM Leaf := do
   if id ≤ 990 then
     let s := fours[(id - 1) / 2]!
@@ -229,7 +229,7 @@ private def originalLeaf (e : Expr) (units : List (Nat × Bool))
     let raw := if expected then mkApp (mkConst ``Not) p else p
     return ⟨raw, .unit v expected⟩
 
-private def leaves (e : Expr) (ids : List Nat)
+def leaves (e : Expr) (ids : List Nat)
     (units : List (Nat × Bool)) : MetaM (Array Leaf) := do
   let mut out := #[]
   let fours := (choose 4 (List.range 12)).toArray
@@ -239,7 +239,7 @@ private def leaves (e : Expr) (ids : List Nat)
     out := out.push (← originalLeaf e units fours parts id)
   return out
 
-private def rawSpecialization (raw e : Expr) : MetaM Expr := do
+def rawSpecialization (raw e : Expr) : MetaM Expr := do
   let mut out := raw
   for (i, j) in edges do
     out := mkApp out (edgeExpr e i j)
@@ -247,14 +247,14 @@ private def rawSpecialization (raw e : Expr) : MetaM Expr := do
     out := mkApp out (← homogeneousExpr e s)
   return out
 
-private def natListExpr (xs : List Nat) : MetaM Expr :=
+def natListExpr (xs : List Nat) : MetaM Expr :=
   mkListLit (mkConst ``Nat) (xs.map mkNatLit)
 
-private def unitExpr (v : Nat) (expected : Bool) : MetaM Expr :=
+def unitExpr (v : Nat) (expected : Bool) : MetaM Expr :=
   mkAppM ``Prod.mk #[mkNatLit v,
     mkConst (if expected then ``Bool.true else ``Bool.false)]
 
-private def unitMembershipProof (units : List (Nat × Bool))
+def unitMembershipProof (units : List (Nat × Bool))
     (v : Nat) (expected : Bool) : MetaM Expr := do
   let some index := units.idxOf? (v, expected)
     | throwError "unit is absent from the normalization list"
@@ -268,7 +268,7 @@ private def unitMembershipProof (units : List (Nat × Bool))
     proof := mkApp5 (mkConst ``List.Mem.tail [0]) prodTy u values[i]! as proof
   return proof
 
-private def impossibleProof (pos neg : Expr) (positive : Bool) (h : Expr) : Expr :=
+def impossibleProof (pos neg : Expr) (positive : Bool) (h : Expr) : Expr :=
   let hom := mkApp2 (mkConst ``Or) pos neg
   let mono := mkApp3 (mkConst ``And.right) (mkApp (mkConst ``Not) hom)
     (if positive then pos else neg) h
@@ -280,7 +280,7 @@ private def impossibleProof (pos neg : Expr) (positive : Bool) (h : Expr) : Expr
     mkApp3 (mkConst ``Or.inr) pos neg mono
   mkApp notHom witness
 
-private def leafProof (e unitsExpr : Expr) (units : List (Nat × Bool))
+def leafProof (e unitsExpr : Expr) (units : List (Nat × Bool))
     (leaf : Leaf) (h : Expr) : MetaM Expr := do
   match leaf.kind with
   | .positiveFour s =>
@@ -312,7 +312,7 @@ private def leafProof (e unitsExpr : Expr) (units : List (Nat × Bool))
       let hu ← unitMembershipProof units v expected
       mkAppM ``outcome_of_unit #[e, unitsExpr, u, hu, h]
 
-private partial def bridgeRange (e unitsExpr : Expr) (units : List (Nat × Bool)) (ls : Array Leaf)
+partial def bridgeRange (e unitsExpr : Expr) (units : List (Nat × Bool)) (ls : Array Leaf)
     (start stop : Nat) (h : Expr) : MetaM Expr := do
   match stop - start with
   | 0 =>
@@ -332,7 +332,7 @@ private partial def bridgeRange (e unitsExpr : Expr) (units : List (Nat × Bool)
           let fr ← mkLambdaFVars #[hr] pr
           return mkApp6 (mkConst ``Or.elim) left right target h fl fr
 
-private partial def decodeList (e : Expr) : MetaM (List Expr) := do
+partial def decodeList (e : Expr) : MetaM (List Expr) := do
   let e ← withTransparency .all <| whnf e
   match e.getAppFn.constName? with
   | some ``List.nil => return []
@@ -343,26 +343,26 @@ private partial def decodeList (e : Expr) : MetaM (List Expr) := do
       return head :: (← decodeList tail)
   | _ => throwError "expected a reducible list, got {e}"
 
-private def decodeNat (e : Expr) : MetaM Nat := do
+def decodeNat (e : Expr) : MetaM Nat := do
   let e ← withTransparency .all <| whnf e
   let some n := e.rawNatLit? | throwError "expected a natural literal, got {e}"
   return n
 
-private def decodeBool (e : Expr) : MetaM Bool := do
+def decodeBool (e : Expr) : MetaM Bool := do
   let e ← withTransparency .all <| whnf e
   match e.constName? with
   | some ``Bool.true => return true
   | some ``Bool.false => return false
   | _ => throwError "expected a Boolean literal, got {e}"
 
-private def decodeUnit (e : Expr) : MetaM (Nat × Bool) := do
+def decodeUnit (e : Expr) : MetaM (Nat × Bool) := do
   let e ← withTransparency .all <| whnf e
   unless e.getAppFn.constName? = some ``Prod.mk do
     throwError "expected a pair, got {e}"
   let args := e.getAppArgs
   return (← decodeNat args[args.size - 2]!, ← decodeBool args[args.size - 1]!)
 
-private def bridgedSpecializationWithIds (raw : Expr) (ids : List Nat)
+def bridgedSpecializationWithIds (raw : Expr) (ids : List Nat)
     (unitsExpr e : Expr) : MetaM Expr := do
   let units ← (decodeList unitsExpr).bind fun xs => xs.mapM decodeUnit
   let ls ← leaves e ids units
@@ -370,11 +370,11 @@ private def bridgedSpecializationWithIds (raw : Expr) (ids : List Nat)
   let h ← rawSpecialization raw e
   bridgeRange e unitsExpr units ls 0 ls.size h
 
-private def bridgedSpecialization (raw idsExpr unitsExpr e : Expr) : MetaM Expr := do
+def bridgedSpecialization (raw idsExpr unitsExpr e : Expr) : MetaM Expr := do
   let ids ← (decodeList idsExpr).bind fun xs => xs.mapM decodeNat
   bridgedSpecializationWithIds raw ids unitsExpr e
 
-private def decodeIdText (e : Expr) : MetaM (List Nat) := do
+def decodeIdText (e : Expr) : MetaM (List Nat) := do
   let e ← withTransparency .all <| whnf e
   let .lit (.strVal text) := e | throwError "expected reduced-clause ID text, got {e}"
   let mut ids := []
@@ -384,7 +384,7 @@ private def decodeIdText (e : Expr) : MetaM (List Nat) := do
       ids := id :: ids
   return ids.reverse
 
-private def caseLeavesFromText (idsExpr unitsExpr e : Expr) : MetaM
+def caseLeavesFromText (idsExpr unitsExpr e : Expr) : MetaM
     (List Nat × List (Nat × Bool) × Array Leaf) := do
   let ids ← decodeIdText idsExpr
   let units ← (decodeList unitsExpr).bind fun xs => xs.mapM decodeUnit
@@ -392,11 +392,11 @@ private def caseLeavesFromText (idsExpr unitsExpr e : Expr) : MetaM
   unless ls.size = ids.length do throwError "unexpected reduced D12 leaf count: {ls.size}"
   return (ids, units, ls)
 
-private def checkRange (ls : Array Leaf) (start stop : Nat) : MetaM Unit := do
+def checkRange (ls : Array Leaf) (start stop : Nat) : MetaM Unit := do
   unless start < stop && stop ≤ ls.size do
     throwError "invalid D12 semantic range [{start}, {stop}) for {ls.size} clauses"
 
-private def semanticRangeType (idsExpr unitsExpr e : Expr)
+def semanticRangeType (idsExpr unitsExpr e : Expr)
     (start stop : Nat) : MetaM Expr := do
   let (_, _, ls) ← caseLeavesFromText idsExpr unitsExpr e
   checkRange ls start stop
@@ -404,7 +404,7 @@ private def semanticRangeType (idsExpr unitsExpr e : Expr)
   let target ← mkAppM ``D12Outcome #[e, unitsExpr]
   mkArrow raw target
 
-private def semanticRangeProof (idsExpr unitsExpr e : Expr)
+def semanticRangeProof (idsExpr unitsExpr e : Expr)
     (start stop : Nat) : MetaM Expr := do
   let (_, units, ls) ← caseLeavesFromText idsExpr unitsExpr e
   checkRange ls start stop

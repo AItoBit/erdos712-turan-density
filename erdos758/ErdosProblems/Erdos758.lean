@@ -307,45 +307,45 @@ open Lean Elab Term Meta
 
 meta section D8PropositionalElaboration
 
-private def choose : (k : Nat) → List Nat → List (List Nat)
+def choose : (k : Nat) → List Nat → List (List Nat)
   | 0, _ => [[]]
   | _ + 1, [] => []
   | k + 1, x :: xs =>
       (choose k xs).map (fun ys => x :: ys) ++ choose (k + 1) xs
 
-private def pairs : List Nat → List (Nat × Nat)
+def pairs : List Nat → List (Nat × Nat)
   | [] => []
   | x :: xs => xs.map (fun y => (x, y)) ++ pairs xs
 
-private def edges : List (Nat × Nat) := pairs (List.range 8)
+def edges : List (Nat × Nat) := pairs (List.range 8)
 
-private def triangles : List (List Nat) := choose 3 (List.range 8)
+def triangles : List (List Nat) := choose 3 (List.range 8)
 
-private def edgeIndex (i j : Nat) : Nat :=
+def edgeIndex (i j : Nat) : Nat :=
   (edges.zipIdx.find? fun p => p.1 = (i, j)).get!.2
 
-private def edgeExpr (e : Expr) (i j : Nat) : Expr :=
+def edgeExpr (e : Expr) (i j : Nat) : Expr :=
   mkApp e (mkNatLit (edgeIndex i j))
 
-private def mkAndExpr : List Expr → MetaM Expr
+def mkAndExpr : List Expr → MetaM Expr
   | [] => pure (mkConst ``True)
   | [p] => pure p
   | p :: ps => return mkApp2 (mkConst ``And) p (← mkAndExpr ps)
 
-private def homogeneousExpr (e : Expr) (s : List Nat) : MetaM Expr := do
+def homogeneousExpr (e : Expr) (s : List Nat) : MetaM Expr := do
   let es := (pairs s).map fun ij => edgeExpr e ij.1 ij.2
   let pos ← mkAndExpr es
   let neg ← mkAndExpr (es.map fun p => mkApp (mkConst ``Not) p)
   return mkApp2 (mkConst ``Or) pos neg
 
-private def homogeneousParts (e : Expr) (s : List Nat) : MetaM (Expr × Expr) := do
+def homogeneousParts (e : Expr) (s : List Nat) : MetaM (Expr × Expr) := do
   let es := (pairs s).map fun ij => edgeExpr e ij.1 ij.2
   return (← mkAndExpr es, ← mkAndExpr (es.map fun p => mkApp (mkConst ``Not) p))
 
-private def disjoint (s t : List Nat) : Bool :=
+def disjoint (s t : List Nat) : Bool :=
   s.all fun x => !t.contains x
 
-private partial def balancedOr (xs : Array Expr) (start stop : Nat) : Expr :=
+partial def balancedOr (xs : Array Expr) (start stop : Nat) : Expr :=
   match stop - start with
   | 0 => mkConst ``False
   | 1 => xs[start]!
@@ -353,24 +353,24 @@ private partial def balancedOr (xs : Array Expr) (start stop : Nat) : Expr :=
       let mid := start + len / 2
       mkApp2 (mkConst ``Or) (balancedOr xs start mid) (balancedOr xs mid stop)
 
-private inductive LeafKind
+inductive LeafKind
   | same
   | impossible (pos neg : Expr) (positive : Bool)
   deriving Inhabited
 
-private inductive ColoringKind
+inductive ColoringKind
   | four (s : List Nat) (positive : Bool)
   | twoTriples (s t : List Nat)
   deriving Inhabited
 
-private structure Leaf where
+structure Leaf where
   raw : Expr
   target : Expr
   kind : LeafKind
   coloring : Option ColoringKind
   deriving Inhabited
 
-private def leaves (e : Expr) : MetaM (Array Leaf) := do
+def leaves (e : Expr) : MetaM (Array Leaf) := do
   let mut out := #[]
   for s in choose 4 (List.range 8) do
     let (pos, neg) ← homogeneousParts e s
@@ -394,11 +394,11 @@ private def leaves (e : Expr) : MetaM (Array Leaf) := do
     out := out.push ⟨p, p, .same, some (.twoTriples s t)⟩
   return out
 
-private def conclusionExpr (e : Expr) : MetaM Expr := do
+def conclusionExpr (e : Expr) : MetaM Expr := do
   let ls ← leaves e
   return balancedOr (ls.map fun l => l.target) 0 ls.size
 
-private def rawSpecialization (e : Expr) : MetaM Expr := do
+def rawSpecialization (e : Expr) : MetaM Expr := do
   let mut out := Lean.mkConst ``raw
   for (i, j) in edges do
     out := mkApp out (edgeExpr e i j)
@@ -406,7 +406,7 @@ private def rawSpecialization (e : Expr) : MetaM Expr := do
     out := mkApp out (← homogeneousExpr e s)
   return out
 
-private partial def bridgeRange (ls : Array Leaf) (start stop : Nat)
+partial def bridgeRange (ls : Array Leaf) (start stop : Nat)
     (h : Expr) : MetaM Expr := do
   match stop - start with
   | 0 => return mkApp (mkConst ``False.elim) h
@@ -441,7 +441,7 @@ private partial def bridgeRange (ls : Array Leaf) (start stop : Nat)
           let fr ← mkLambdaFVars #[hr] pr
           return mkApp6 (mkConst ``Or.elim) rawLeft rawRight target h fl fr
 
-private def bridgedSpecialization (e : Expr) : MetaM Expr := do
+def bridgedSpecialization (e : Expr) : MetaM Expr := do
   let ls ← leaves e
   bridgeRange ls 0 ls.size (← rawSpecialization e)
 
@@ -695,7 +695,7 @@ private def graphEdge (G : SimpleGraph (Fin 8)) : Nat → Prop
 
 meta section D8GraphElaboration
 
-private def fin8ListExpr (xs : List Nat) : MetaM Expr := do
+def fin8ListExpr (xs : List Nat) : MetaM Expr := do
   let fin8 := mkApp (mkConst ``Fin) (mkNatLit 8)
   let mut out := []
   for x in xs do
@@ -704,7 +704,7 @@ private def fin8ListExpr (xs : List Nat) : MetaM Expr := do
     out := mkApp3 (mkConst ``Fin.mk) (mkNatLit 8) (mkNatLit x) hx :: out
   mkListLit fin8 out.reverse
 
-private def coloringLeafProof (G : Expr) (leaf : Leaf) (h : Expr) : MetaM Expr := do
+def coloringLeafProof (G : Expr) (leaf : Leaf) (h : Expr) : MetaM Expr := do
   match leaf.coloring with
   | none =>
       let target ← mkAppM ``CochromaticColorable #[G, mkNatLit 3]
@@ -742,7 +742,7 @@ private def coloringLeafProof (G : Expr) (leaf : Leaf) (h : Expr) : MetaM Expr :
       let hc ← mkDecideProof hcTy
       mkAppM ``colorable_of_two_triples #[G, A, B, C, cover, hc, h]
 
-private partial def graphColoringRange (G : Expr) (ls : Array Leaf)
+partial def graphColoringRange (G : Expr) (ls : Array Leaf)
     (start stop : Nat) (h : Expr) : MetaM Expr := do
   match stop - start with
   | 0 =>
@@ -762,7 +762,7 @@ private partial def graphColoringRange (G : Expr) (ls : Array Leaf)
           let fr ← mkLambdaFVars #[hr] pr
           return mkApp6 (mkConst ``Or.elim) left right target h fl fr
 
-private def graphColoringSpecialization (G : Expr) : MetaM Expr := do
+def graphColoringSpecialization (G : Expr) : MetaM Expr := do
   let edge := mkApp (mkConst ``graphEdge) G
   let ls ← leaves edge
   graphColoringRange G ls 0 ls.size (mkApp (mkConst ``semantic) edge)
