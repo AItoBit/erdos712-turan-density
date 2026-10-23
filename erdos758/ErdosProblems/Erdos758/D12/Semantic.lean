@@ -38,7 +38,7 @@ different vertices of `Fin 12`. -/
 def ValidFour (s : List Nat) : Prop :=
   s.length = 4 ∧ s.Nodup ∧ s.toFinset ⊆ Finset.range 12
 
-private instance (s : List Nat) : Decidable (ValidFour s) := by
+instance (s : List Nat) : Decidable (ValidFour s) := by
   unfold ValidFour
   infer_instance
 
@@ -49,7 +49,7 @@ def ValidTriplePartition (a b c d : List Nat) : Prop :=
     (a ++ b ++ c ++ d).Nodup ∧
     (a ++ b ++ c ++ d).toFinset = Finset.range 12
 
-private instance (a b c d : List Nat) : Decidable (ValidTriplePartition a b c d) := by
+instance (a b c d : List Nat) : Decidable (ValidTriplePartition a b c d) := by
   unfold ValidTriplePartition
   infer_instance
 
